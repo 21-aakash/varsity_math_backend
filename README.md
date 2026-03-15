@@ -293,28 +293,60 @@ Once the server is running, visit:
 
 ## 🚀 Deployment
 
+### Quick Deploy Options
+
+#### Railway (Easiest - Recommended)
+1. **Connect your GitHub repo** to [Railway](https://railway.app)
+2. **Railway auto-detects** the `railway.toml` config
+3. **Add environment variables** from `.env.production`
+4. **Deploy** - Done! 🚀
+
+#### Render (Free tier available)
+1. **Create Web Service** on [Render](https://render.com)
+2. **Connect GitHub repo**
+3. **Set commands**:
+   - Build: `pip install -r requirements.txt && python -m alembic upgrade head`
+   - Start: `python run.py`
+4. **Add environment variables** from `.env.production`
+
+#### Manual Deployment
+```bash
+# Linux/Mac
+./deploy.sh
+
+# Windows
+deploy.bat
+```
+
 ### Production Considerations
-- Use environment variables for sensitive data
-- Configure CORS properly for production domain
-- Use a production-grade database (PostgreSQL/MySQL)
-- Enable HTTPS
-- Set up proper logging
-- Configure rate limiting
-- Use a reverse proxy (nginx)
+- ✅ CORS configured for `https://varsitymath.netlify.app`
+- ✅ Environment variables for sensitive data
+- ✅ Production-grade database (PostgreSQL recommended)
+- ✅ Health check endpoint at `/health`
+- ✅ Docker support with provided Dockerfile
+- ✅ Heroku support with Procfile
+
+### Environment Variables for Production
+
+Copy these from `.env.production` to your deployment platform:
+
+```env
+DATABASE_URL=postgresql+asyncpg://user:password@host:port/database
+SECRET_KEY=your-super-secret-key-change-this-in-production
+ENVIRONMENT=production
+```
+
+### Database Setup for Production
+
+1. **Create PostgreSQL database** on your hosting platform
+2. **Update DATABASE_URL** in environment variables
+3. **Deploy** - migrations run automatically
 
 ### Docker Deployment
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-RUN python -m alembic upgrade head
-
-EXPOSE 8000
-CMD ["python", "run.py"]
+```bash
+# Build and run
+docker build -t varsity-backend .
+docker run -p 8001:8001 varsity-backend
 ```
 
 ## 🤝 Contributing

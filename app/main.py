@@ -7,7 +7,10 @@ app = FastAPI(title="Varsity Website API", version="1.0.0")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=[
+        "http://localhost:3000",  # Development
+        "https://varsitymath.netlify.app",  # Production frontend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,3 +28,7 @@ app.include_router(enrollments.router, prefix="/enrollments", tags=["Enrollments
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Varsity Website API"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "version": "1.0.0"}
