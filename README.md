@@ -302,12 +302,24 @@ Once the server is running, visit:
 4. **Deploy** - Done! 🚀
 
 #### Render (Free tier available)
-1. **Create Web Service** on [Render](https://render.com)
-2. **Connect GitHub repo**
-3. **Set commands**:
-   - Build: `pip install -r requirements.txt && python -m alembic upgrade head`
-   - Start: `python run.py`
-4. **Add environment variables** from `.env.production`
+1. **Create PostgreSQL Database:**
+   - Go to Render Dashboard → New → PostgreSQL
+   - Choose free tier, name it (e.g., `varsity-db`)
+   - Create database
+
+2. **Create Web Service:**
+   - New → Web Service
+   - Connect your GitHub repository
+   - **Runtime**: Python 3
+   - **Build Command**: `pip install -r requirements.txt && python -m alembic upgrade head`
+   - **Start Command**: `gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT`
+
+3. **Add Environment Variables:**
+   - `DATABASE_URL`: Copy from PostgreSQL "External Database URL"
+   - `SECRET_KEY`: Generate a strong random key
+   - `ENVIRONMENT`: production
+
+4. **Deploy!** 🚀
 
 #### Manual Deployment
 ```bash
@@ -338,13 +350,39 @@ ENVIRONMENT=production
 
 ### Database Setup for Production
 
+#### PostgreSQL Configuration
+The app automatically detects and uses PostgreSQL when you set the `DATABASE_URL` environment variable.
+
+**Example PostgreSQL URL:**
+```
+postgresql://username:password@host:port/database_name
+```
+
+#### Testing Database Connection
+Before deploying, test your database connection:
+
+**Windows:**
+```cmd
+test-db.bat
+```
+
+**Linux/Mac:**
+```bash
+./test-db.sh
+```
+
+This will:
+- ✅ Test database connectivity
+- 🗄️ Run migrations automatically
+- 📊 Verify all tables are created
+
 1. **Create PostgreSQL database** on your hosting platform
 2. **Update DATABASE_URL** in environment variables
 3. **Deploy** - migrations run automatically
 
 ### Docker Deployment
 ```bash
-# Build and run
+# Build and run with gunicorn
 docker build -t varsity-backend .
 docker run -p 8001:8001 varsity-backend
 ```

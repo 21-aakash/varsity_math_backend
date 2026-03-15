@@ -24,7 +24,7 @@ EXPOSE 8001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8001/ || exit 1
+    CMD python -c "import requests; requests.get('http://localhost:8001/health')" || exit 1
 
-# Start the application
-CMD ["python", "run.py"]
+# Start the application with gunicorn
+CMD ["gunicorn", "app.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8001"]

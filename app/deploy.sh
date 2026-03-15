@@ -28,6 +28,6 @@ if [ ! -f ".env" ]; then
     echo "   Copy from .env.production and update the values."
 fi
 
-# Start the server
-echo "🌟 Starting server..."
-python run.py
+# Start the server with gunicorn
+echo "🌟 Starting server with gunicorn..."
+gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8001

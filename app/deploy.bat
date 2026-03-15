@@ -28,8 +28,8 @@ if not exist ".env" (
     echo    Copy from .env.production and update the values.
 )
 
-REM Start the server
-echo 🌟 Starting server...
-python run.py
+REM Start the server with gunicorn
+echo 🌟 Starting server with gunicorn...
+gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8001
 
 pause
