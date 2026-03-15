@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, users, courses, assignments, study_materials, quizzes
+from app.routers import auth, users, courses, assignments, study_materials, quizzes, enrollments
 
 app = FastAPI(title="Varsity Website API", version="1.0.0")
 
@@ -20,6 +20,7 @@ app.include_router(courses.router, prefix="/courses", tags=["Courses"])
 app.include_router(assignments.router, prefix="/assignments", tags=["Assignments"])
 app.include_router(study_materials.router, prefix="/study-materials", tags=["Study Materials"])
 app.include_router(quizzes.router, prefix="/quizzes", tags=["Quizzes"])
+app.include_router(enrollments.router, prefix="/enrollments", tags=["Enrollments"])
 
 @app.get("/")
 def read_root():
